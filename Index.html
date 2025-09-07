@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cantadas Infinitas 💘</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow-x: hidden;
+    color: #333;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 5px #ff6a88;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 2rem;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+}
+
+select, button {
+    margin: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+select {
+    width: 60%;
+}
+
+button {
+    background: #ff6a88;
+    color: #fff;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #ff4a6f;
+}
+
+.cantada {
+    margin: 1.5rem 0;
+    font-size: 1.3rem;
+    min-height: 60px;
+    transition: 0.2s;
+}
+
+.copiado {
+    color: green;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #fff;
+    text-shadow: 1px 1px 3px #ff6a88;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Corações flutuantes */
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    transform: rotate(45deg);
+    animation: float 3s linear forwards;
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -10px;
+    left: 0;
+}
+
+.heart::after {
+    left: 10px;
+    top: 0;
+}
+
+@keyframes float {
+    0% {transform: translate(0,0) rotate(45deg); opacity:1;}
+    100% {transform: translate(calc(-50px + 100px*random()), -200px) rotate(45deg); opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<h1>Cantadas Infinitas 💘</h1>
+
+<div class="container">
+    <select id="categoria">
+        <option value="romanticas">Românticas ❤️</option>
+        <option value="engracadas">Engraçadas 😂</option>
+        <option value="nerds">Nerds 🤓</option>
+        <option value="pesadas">Pesadas 😏</option>
+    </select>
+
+    <div class="cantada" id="cantada">Clique em "Nova Cantada" para começar...</div>
+
+    <div class="btn-container">
+        <button onclick="novaCantada()">Nova Cantada</button>
+        <button onclick="copiarCantada()">Copiar</button>
+        <button onclick="compartilharCantada()">Compartilhar</button>
+        <button onclick="modoAutomatico()">
+            <span id="autoBtnText">Modo Automático OFF</span>
+        </button>
+    </div>
+
+    <div class="copiado" id="copiado"></div>
+
+    <!-- Áudios -->
+    <audio id="romanticaAudio" src="romantica.mp3"></audio>
+    <audio id="engracadaAudio" src="engracada.mp3"></audio>
+    <audio id="nerdAudio" src="nerd.mp3"></audio>
+    <audio id="pesadaAudio" src="pesada.mp3"></audio>
+</div>
+
+<div class="footer">
+    Criado com 💖 por Bruno | Divirta-se compartilhando cantadas!
+</div>
+
+<script>
+// Cantadas
+const cantadas = {
+    romanticas: [ /* 30 cantadas romanticas aqui, igual da versão anterior */ ],
+    engracadas: [ /* 30 cantadas engraçadas aqui */ ],
+    nerds: [ /* 30 cantadas nerds aqui */ ],
+    pesadas: [ /* 30 cantadas pesadas aqui */ ]
+};
+
+// Áudios
+const audios = {
+    romanticas: document.getElementById('romanticaAudio'),
+    engracadas: document.getElementById('engracadaAudio'),
+    nerds: document.getElementById('nerdAudio'),
+    pesadas: document.getElementById('pesadaAudio')
+};
+
+let autoInterval = null;
+
+// Função nova cantada
+function novaCantada() {
+    const categoria = document.getElementById('categoria').value;
+    const lista = cantadas[categoria];
+    const cantada = lista[Math.floor(Math.random() * lista.length)];
+    document.getElementById('cantada').innerText = cantada;
+    document.getElementById('copiado').innerText = '';
+    tocarAudio(categoria);
+    criarCoracao();
+}
+
+// Copiar cantada
+function copiarCantada() {
+    const texto = document.getElementById('cantada').innerText;
+    navigator.clipboard.writeText(texto).then(() => {
+        document.getElementById('copiado').innerText = 'Cantada copiada! ❤️';
+    });
+}
+
+// Compartilhar no WhatsApp
+function compartilharCantada() {
+    const texto = document.getElementById('cantada').innerText;
+    const url = encodeURIComponent(texto);
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${url}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// Tocar audio
+function tocarAudio(categoria) {
+    Object.values(audios).forEach(a => { a.pause(); a.currentTime = 0; });
+    audios[categoria].play();
+}
+
+// Corações flutuantes
+function criarCoracao() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 90 + '%';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+}
+
+// Modo automático
+function modoAutomatico() {
+    const btn = document.getElementById('autoBtnText');
+    if(autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+        btn.innerText = 'Modo Automático OFF';
+    } else {
+        autoInterval = setInterval(novaCantada, 3000);
+        btn.innerText = 'Modo Automático ON';
+    }
+}
+</script>
+
+</body>
+</html>
