@@ -1,0 +1,16 @@
+{
+  "name": "Cantadas Infinitas",
+  "short_name": "Cantadas",
+  "description": "Gere cantadas românticas, engraçadas, nerds e pesadas para todas as ocasiões.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ff9a9e",
+  "theme_color": "#ff6a88",
+  "icons": [
+    {
+      "src": "/cantadas-infinitas.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -6,14 +6,15 @@
 <title>Cantadas Infinitas 💘</title>
 <meta name="description" content="Gere cantadas românticas, engraçadas, nerds e pesadas para todas as ocasiões. Surpreenda e divirta-se!">
 <meta name="keywords" content="cantadas, cantadas românticas, cantadas engraçadas, cantadas nerds, cantadas pesadas, cantadas para status, cantadas para fotos">
-
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff9a9e">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 body {
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
-    min-height: 100vh;
+    min-height: 10vh;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -190,6 +191,33 @@ button:hover {
 #adicionar-btn:hover {
     background: #45a049;
 }
+
+/* NOVO ESTILO PARA O BOTÃO SOBRE */
+#sobre-btn {
+    background: #007bff; /* Cor azul */
+}
+
+#sobre-btn:hover {
+    background: #0056b3;
+}
+
+/* Estilo para o conteúdo "Sobre" */
+#sobre-conteudo {
+    margin-top: 1rem;
+    text-align: left;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
+    padding: 0 1rem;
+}
+
+#sobre-conteudo.visible {
+    max-height: 500px; /* Altura máxima para animação, pode ser maior ou "none" */
+    overflow-y: auto; /* Adiciona a barra de rolagem se o conteúdo for maior que o container */
+    opacity: 1;
+}
+
 </style>
 </head>
 <body>
@@ -214,6 +242,7 @@ button:hover {
         <button onclick="modoAutomatico()">
             <span id="autoBtnText">Modo Automático OFF</span>
         </button>
+        <button onclick="mostrarSobre()" id="sobre-btn">Sobre</button>
     </div>
 
     <div class="copiado" id="copiado"></div>
@@ -221,6 +250,11 @@ button:hover {
     <div class="input-container">
         <input type="text" id="novaCantadaInput" placeholder="Digite sua cantada aqui...">
         <button onclick="adicionarCantada()" id="adicionar-btn">Adicionar Cantada</button>
+    </div>
+
+    <div id="sobre-conteudo">
+        <p>Olá! Bem-vindo(a) ao **Cantadas Infinitas**, um projeto criado para espalhar um pouco de humor, romance e criatividade. A ideia surgiu da vontade de ter um gerador simples e divertido de cantadas para todas as ocasiões.</p>
+        <p>Este site foi desenvolvido por **Bruno Oliveira Muhacha** como um projeto pessoal para praticar e aprimorar habilidades em HTML, CSS e JavaScript. Espero que você se divirta usando-o tanto quanto eu me diverti criando-o! Se tiver alguma sugestão ou feedback, sinta-se à vontade para me contatar.</p>
     </div>
 
     <audio id="romanticaAudio" src="romantica.mp3"></audio>
@@ -236,7 +270,7 @@ button:hover {
 
 <div class="music-btn" onclick="toggleBackgroundMusic()">
     <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M8 5v14l11-7z"/>
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
     </svg>
 </div>
 
@@ -502,8 +536,47 @@ function adicionarCantada() {
     }
 }
 
+// --- NOVO CÓDIGO PARA O BOTÃO "SOBRE" ---
+let sobreVisivel = false;
+function mostrarSobre() {
+    const sobreConteudo = document.getElementById('sobre-conteudo');
+    const cantadaConteudo = document.getElementById('cantada');
+    const copiadoConteudo = document.getElementById('copiado');
+    const inputContainer = document.querySelector('.input-container');
+
+    // Troca a visibilidade do conteúdo
+    if (sobreVisivel) {
+        // Esconde o conteúdo "Sobre" e mostra o principal
+        sobreConteudo.classList.remove('visible');
+        cantadaConteudo.style.display = 'block';
+        copiadoConteudo.style.display = 'block';
+        inputContainer.style.display = 'flex';
+        sobreVisivel = false;
+    } else {
+        // Esconde o conteúdo principal e mostra o "Sobre"
+        sobreConteudo.classList.add('visible');
+        cantadaConteudo.style.display = 'none';
+        copiadoConteudo.style.display = 'none';
+        inputContainer.style.display = 'none';
+        sobreVisivel = true;
+    }
+}
+
 // Adiciona um evento para carregar as cantadas quando a página for carregada
 document.addEventListener('DOMContentLoaded', carregarMinhasCantadas);
+
+// NOVO CÓDIGO PARA REGISTRAR O SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registrado com sucesso:', registration.scope);
+      })
+      .catch(error => {
+        console.log('Falha no registro do Service Worker:', error);
+      });
+  });
+}
 </script>
 
 </body>
